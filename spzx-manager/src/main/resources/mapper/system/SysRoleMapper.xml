@@ -24,6 +24,16 @@
         values (#{id}, #{roleName}, #{roleCode}, #{description})
     </insert>
 
+    <!--    更新提交数据-->
+    <update id="updateSysRole">
+        update sys_role set
+        <if test="roleName!=null and roleName !=''">role_name=#{roleName},</if>
+        <if test="roleCode!=null and roleCode!=''">role_code=#{roleCode},</if>
+        <if test="description !=null and description !=''">description=#{description},</if>
+        update_time=now()
+        where id =#{id}
+    </update>
+
     <!--寻找实体类的相关信息    -->
     <select id="findByPage" resultType="com.atguigu.spzx.model.entity.system.SysRole">
 

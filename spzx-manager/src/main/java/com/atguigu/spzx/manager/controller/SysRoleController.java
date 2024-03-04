@@ -28,10 +28,20 @@ public class SysRoleController {
     }
 
 
+    //新增角色 也就是保存用户信息
     @PostMapping("/saveSysRole")
-    public Result saveSysRole(@RequestBody SysRole sysRole){
+    public Result saveSysRole(@RequestBody SysRole sysRole) {
         sysRoleService.saveSysRole(sysRole);
-        return  Result.build(null,ResultCodeEnum.SUCCESS);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
 
     }
+
+    //提交修改后的信息
+    @PutMapping("/updateSysRole")
+    public Result updateSysRole(@RequestBody SysRole sysRole) {
+        sysRoleService.updateSysRole(sysRole);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+
 }

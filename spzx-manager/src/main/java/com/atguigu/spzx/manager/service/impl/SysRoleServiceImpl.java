@@ -29,10 +29,18 @@ public class SysRoleServiceImpl implements SysRoleService {
         return pageInfo;
     }
 
+    //新增角色 也就是保存用户信息
+
     @Override
     public void saveSysRole(SysRole sysRole) {
         sysRoleMapper.saveSysRole(sysRole);
 
+    }
+
+    //提交修改后的信息
+    @Override
+    public void updateSysRole(SysRole sysRole) {
+        sysRoleMapper.updateSysRole(sysRole);
     }
 
 
