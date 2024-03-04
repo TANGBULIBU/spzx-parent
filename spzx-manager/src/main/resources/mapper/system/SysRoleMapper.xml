@@ -34,6 +34,14 @@
         where id =#{id}
     </update>
 
+    <!--    修改数据 假删除 就是讲is_deleted 改为1-->
+    <update id="deleteById">
+        update sys_role
+        set is_deleted=1
+        where id = #{value}
+
+    </update>
+
     <!--寻找实体类的相关信息    -->
     <select id="findByPage" resultType="com.atguigu.spzx.model.entity.system.SysRole">
 

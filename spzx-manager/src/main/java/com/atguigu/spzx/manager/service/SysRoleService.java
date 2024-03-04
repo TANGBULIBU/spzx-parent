@@ -13,4 +13,5 @@ public interface SysRoleService {
     void updateSysRole(SysRole sysRole);
 
 
+    void deleteById(Long roleId);
 }
