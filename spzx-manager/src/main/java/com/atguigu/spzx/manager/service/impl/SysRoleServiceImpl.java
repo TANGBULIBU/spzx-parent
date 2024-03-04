@@ -29,5 +29,11 @@ public class SysRoleServiceImpl implements SysRoleService {
         return pageInfo;
     }
 
+    @Override
+    public void saveSysRole(SysRole sysRole) {
+        sysRoleMapper.saveSysRole(sysRole);
+
+    }
+
 
 }

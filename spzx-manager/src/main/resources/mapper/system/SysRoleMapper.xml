@@ -4,7 +4,8 @@
 
     <!-- 用于select查询公用抽取的列 -->
     <sql id="columns">
-        id,role_name,role_code,description,create_time,update_time,is_deleted
+        id
+        ,role_name,role_code,description,create_time,update_time,is_deleted
     </sql>
 
     <sql id="findPageWhere">
@@ -16,7 +17,14 @@
         </where>
     </sql>
 
-    <!--    -->
+
+    <!--    新增成员-->
+    <insert id="saveSysRole">
+        insert into sys_role (id, role_name, role_code, description)
+        values (#{id}, #{roleName}, #{roleCode}, #{description})
+    </insert>
+
+    <!--寻找实体类的相关信息    -->
     <select id="findByPage" resultType="com.atguigu.spzx.model.entity.system.SysRole">
 
         select

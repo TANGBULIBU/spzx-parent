@@ -28,4 +28,10 @@ public class SysRoleController {
     }
 
 
+    @PostMapping("/saveSysRole")
+    public Result saveSysRole(@RequestBody SysRole sysRole){
+        sysRoleService.saveSysRole(sysRole);
+        return  Result.build(null,ResultCodeEnum.SUCCESS);
+
+    }
 }
