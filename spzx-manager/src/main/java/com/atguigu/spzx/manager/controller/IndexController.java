@@ -57,6 +57,7 @@ public class IndexController {
         return Result.build(AuthContextUtil.get(),ResultCodeEnum.SUCCESS);
     }
 
+
     @Operation(summary = "退出")
     @GetMapping("/logout")
     public Result logout(@RequestHeader(value="token") String token){
@@ -64,4 +65,10 @@ public class IndexController {
         return Result.build(null,ResultCodeEnum.SUCCESS);
     }
 
+    //添加用户 保存用户信息
+    @PostMapping(value = "/saveSysUser")
+    public Result saveSysUser(@RequestBody SysUser sysUser) {
+        sysUserService.saveSysUser(sysUser) ;
+        return Result.build(null , ResultCodeEnum.SUCCESS) ;
+    }
 }

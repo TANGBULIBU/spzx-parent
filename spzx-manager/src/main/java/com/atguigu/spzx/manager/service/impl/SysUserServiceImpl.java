@@ -6,15 +6,19 @@ import com.atguigu.spzx.common.exception.GuiguException;
 import com.atguigu.spzx.manager.mapper.SysUserMapper;
 import com.atguigu.spzx.manager.service.SysUserService;
 import com.atguigu.spzx.model.dto.system.LoginDto;
+import com.atguigu.spzx.model.dto.system.SysUserDto;
 import com.atguigu.spzx.model.entity.system.SysUser;
 import com.atguigu.spzx.model.vo.common.ResultCodeEnum;
 import com.atguigu.spzx.model.vo.system.LoginVo;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -80,8 +84,39 @@ public class SysUserServiceImpl implements SysUserService {
         return JSON.parseObject(userJson, SysUser.class);
     }
 
+    //登出就是并且删除token
     @Override
     public void logout(String token) {
         redisTemplate.delete("user:login:" + token);
+    }
+
+    //查询用户
+    @Override
+    public PageInfo<SysUser> findByPage(SysUserDto sysUserDto, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<SysUser> sysUserList = sysUserMapper.findByPage(sysUserDto);
+        PageInfo pageInfo = new PageInfo(sysUserList);
+        return pageInfo;
+    }
+
+
+    //用户数据保存
+    @Override
+    public void saveSysUser(SysUser sysUser) {
+        //避免重名 查询用户信息
+        SysUser dbSysUser = sysUserMapper.findByUserName(sysUser.getUserName());
+        if (dbSysUser != null) {
+            throw new GuiguException(ResultCodeEnum.USER_NAME_IS_EXISTS);
+        }
+
+
+        //对输入的密码进行加密 加入到数据库中
+        String password = sysUser.getPassword();
+        String digestPassword = DigestUtils.md5DigestAsHex(password.getBytes());
+        sysUser.setPassword(digestPassword);
+        sysUser.setStatus(0);
+        sysUserMapper.saveSysUser(sysUser);
+
+
     }
 }
