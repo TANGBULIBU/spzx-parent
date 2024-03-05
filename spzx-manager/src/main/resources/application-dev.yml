@@ -32,3 +32,8 @@ spzx:
       - /webjars/**
       - /favicon.ico
       - /v3/**
+  minio:
+    endpointUrl: http://127.0.0.1:9000
+    accessKey: Qxj6SqNo6LlOQ0ctPnnV
+    secreKey: zvxUyFYzryql0FGQ3HC1MzK953i2Z0Co6t6BitAb
+    bucketName: spzx-bucket
