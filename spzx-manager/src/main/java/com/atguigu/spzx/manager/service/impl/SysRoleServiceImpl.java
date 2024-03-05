@@ -9,7 +9,9 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SysRoleServiceImpl implements SysRoleService {
@@ -20,10 +22,10 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     public PageInfo<SysRole> findByPage(SysRoleDto sysRoleDto, Integer pageNum, Integer pageSize) {
         //分页传值
-        PageHelper.startPage(pageNum,pageSize);
+        PageHelper.startPage(pageNum, pageSize);
 
         //通过分页查询找到相关数据 用list集合返回
-        List<SysRole> sysRoles= sysRoleMapper.findByPage(sysRoleDto);
+        List<SysRole> sysRoles = sysRoleMapper.findByPage(sysRoleDto);
         PageInfo<SysRole> pageInfo = new PageInfo(sysRoles);
 
         return pageInfo;
@@ -48,6 +50,18 @@ public class SysRoleServiceImpl implements SysRoleService {
     public void deleteById(Long roleId) {
         sysRoleMapper.deleteById(roleId);
 
+    }
+
+    @Override
+    public Map<String, Object> findAllRoles() {
+        //使用List接收
+        List<SysRole> sysRoles =
+                sysRoleMapper.findAllroles();
+
+        Map<String ,Object> map=new HashMap<>();
+        //将list插入map中
+        map.put("allRolesList",sysRoles);
+        return map;
     }
 
 

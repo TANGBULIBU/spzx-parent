@@ -9,6 +9,8 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/admin/system/sysRole")
 
@@ -50,5 +52,11 @@ public class SysRoleController {
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }
 
+    //查询所有的角色 例如：管理员等
+    @GetMapping("/findAllRoles")
+    public Result<Map<String ,Object>> findAllRoles(){
+        Map<String ,Object> map= sysRoleService.findAllRoles();
+        return Result.build(map, ResultCodeEnum.SUCCESS);
+    }
 
 }

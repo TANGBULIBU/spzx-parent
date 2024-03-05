@@ -52,4 +52,12 @@
         order by id desc
     </select>
 
+    <!--    查询所有的角色 例如管理员等-->
+    <select id="findAllroles" resultType="com.atguigu.spzx.model.entity.system.SysRole">
+        select
+        <include refid="columns"/>
+        from sys_role where is_deleted=0
+
+    </select>
+
 </mapper>
