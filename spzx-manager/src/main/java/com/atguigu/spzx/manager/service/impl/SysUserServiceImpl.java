@@ -119,4 +119,17 @@ public class SysUserServiceImpl implements SysUserService {
 
 
     }
+
+    @Override
+    public void updateSysUser(SysUser sysUser) {
+        sysUserMapper.updateSysUser(sysUser) ;
+
+
+    }
+
+    @Override
+    public void deleteById(Long userId) {
+        sysUserMapper.deleteById(userId) ;
+
+    }
 }

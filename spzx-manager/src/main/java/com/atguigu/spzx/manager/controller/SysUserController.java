@@ -1,5 +1,6 @@
 package com.atguigu.spzx.manager.controller;
 
+import cn.hutool.log.Log;
 import com.atguigu.spzx.manager.service.SysUserService;
 import com.atguigu.spzx.model.dto.system.SysUserDto;
 import com.atguigu.spzx.model.entity.system.SysRole;
@@ -29,10 +30,22 @@ public class SysUserController {
     }
 
     //添加用户
-    @PostMapping(value = "/saveSysUser")
+    @PostMapping( "/saveSysUser")
     public Result saveSysUser(@RequestBody SysUser sysUser) {
         sysUserService.saveSysUser(sysUser) ;
         return Result.build(null , ResultCodeEnum.SUCCESS) ;
     }
 
+    //更新用户数据
+    @PutMapping("/updateSysUser")
+    public Result updateSysUser(@RequestBody SysUser sysUser) {
+        sysUserService.updateSysUser(sysUser) ;
+        return Result.build(null , ResultCodeEnum.SUCCESS) ;
+    }
+
+    @DeleteMapping("/deleteById/{userId}")
+    public Result deleteById(@PathVariable(value = "userId")Long userId){
+        sysUserService.deleteById(userId) ;
+        return Result.build(null , ResultCodeEnum.SUCCESS) ;
+    }
 }

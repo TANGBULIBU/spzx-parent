@@ -71,4 +71,6 @@ public class IndexController {
         sysUserService.saveSysUser(sysUser) ;
         return Result.build(null , ResultCodeEnum.SUCCESS) ;
     }
+
+
 }
