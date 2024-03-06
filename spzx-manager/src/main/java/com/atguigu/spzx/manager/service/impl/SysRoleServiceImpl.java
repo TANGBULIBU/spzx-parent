@@ -6,6 +6,7 @@ import com.atguigu.spzx.model.dto.system.SysRoleDto;
 import com.atguigu.spzx.model.entity.system.SysRole;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,6 @@ public class SysRoleServiceImpl implements SysRoleService {
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
-
     @Override
     public PageInfo<SysRole> findByPage(SysRoleDto sysRoleDto, Integer pageNum, Integer pageSize) {
         //分页传值
@@ -32,7 +32,6 @@ public class SysRoleServiceImpl implements SysRoleService {
     }
 
     //新增角色 也就是保存用户信息
-
     @Override
     public void saveSysRole(SysRole sysRole) {
         sysRoleMapper.saveSysRole(sysRole);
@@ -40,10 +39,12 @@ public class SysRoleServiceImpl implements SysRoleService {
     }
 
     //提交修改后的信息
+
     @Override
     public void updateSysRole(SysRole sysRole) {
         sysRoleMapper.updateSysRole(sysRole);
     }
+
 
     //删除角色
     @Override
@@ -51,6 +52,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         sysRoleMapper.deleteById(roleId);
 
     }
+
 
     @Override
     public Map<String, Object> findAllRoles() {

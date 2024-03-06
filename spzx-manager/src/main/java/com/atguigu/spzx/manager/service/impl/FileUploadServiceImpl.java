@@ -3,6 +3,7 @@ package com.atguigu.spzx.manager.service.impl;
 import com.atguigu.spzx.manager.properties.MinioProperties;
 import com.atguigu.spzx.manager.service.FileUploadService;
 import com.atguigu.spzx.utils.FileUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

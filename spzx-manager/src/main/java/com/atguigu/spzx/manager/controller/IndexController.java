@@ -66,6 +66,8 @@ public class IndexController {
     }
 
     //添加用户 保存用户信息
+    @Operation(summary = "保存用户信息")
+
     @PostMapping(value = "/saveSysUser")
     public Result saveSysUser(@RequestBody SysUser sysUser) {
         sysUserService.saveSysUser(sysUser) ;

@@ -6,11 +6,14 @@ import com.atguigu.spzx.model.entity.system.SysRole;
 import com.atguigu.spzx.model.vo.common.Result;
 import com.atguigu.spzx.model.vo.common.ResultCodeEnum;
 import com.github.pagehelper.PageInfo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Tag(name = "角色管理")
 @RestController
 @RequestMapping("/admin/system/sysRole")
 
@@ -18,6 +21,7 @@ public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
 
+    @Operation(summary = "查找分页数据")
     @PostMapping("/findByPage/{pageNum}/{pageSize}")
     //一个请求体 两个路径传参
     public Result<PageInfo<SysRole>> findByPage(@RequestBody SysRoleDto sysRoleDto,
@@ -31,6 +35,8 @@ public class SysRoleController {
 
 
     //新增角色 也就是保存用户信息
+
+    @Operation(summary = "新增角色")
     @PostMapping("/saveSysRole")
     public Result saveSysRole(@RequestBody SysRole sysRole) {
         sysRoleService.saveSysRole(sysRole);
@@ -39,6 +45,7 @@ public class SysRoleController {
     }
 
     //提交修改后的信息
+    @Operation(summary = "提交修改后角色信息")
     @PutMapping("/updateSysRole")
     public Result updateSysRole(@RequestBody SysRole sysRole) {
         sysRoleService.updateSysRole(sysRole);
@@ -46,6 +53,7 @@ public class SysRoleController {
     }
 
     //删除角色
+    @Operation(summary = "删除角色")
     @DeleteMapping("/deleteById/{roleId}")
     public Result deleteById(@PathVariable("roleId") Long roleId ) {
         sysRoleService.deleteById(roleId);
@@ -53,6 +61,7 @@ public class SysRoleController {
     }
 
     //查询所有的角色 例如：管理员等
+    @Operation(summary = "查询所有角色")
     @GetMapping("/findAllRoles")
     public Result<Map<String ,Object>> findAllRoles(){
         Map<String ,Object> map= sysRoleService.findAllRoles();

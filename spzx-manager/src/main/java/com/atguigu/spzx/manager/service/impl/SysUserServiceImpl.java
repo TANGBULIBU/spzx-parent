@@ -13,6 +13,7 @@ import com.atguigu.spzx.model.vo.system.LoginVo;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Operation(summary = "登录验证码和token校验")
     @Override
     public LoginVo login(LoginDto loginDto) {
 
@@ -76,7 +78,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     //根据token获取用户数据接口的方法
-
+    @Operation(summary = "根据token获取用户数据接口的方法")
     @Override
     public SysUser getUserInfo(String token) {
         String userJson = redisTemplate.opsForValue().get("user:login:" + token);
@@ -85,6 +87,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     //登出就是并且删除token
+    @Operation(summary = "登出并且删除token")
     @Override
     public void logout(String token) {
         redisTemplate.delete("user:login:" + token);

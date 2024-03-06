@@ -8,6 +8,7 @@ import com.atguigu.spzx.model.entity.system.SysUser;
 import com.atguigu.spzx.model.vo.common.Result;
 import com.atguigu.spzx.model.vo.common.ResultCodeEnum;
 import com.github.pagehelper.PageInfo;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class SysUserController {
     private SysUserService sysUserService;
 
     //查询用户
+    @Operation(summary = "查询用户")
     @PostMapping("/findByPage/{pageNum}/{pageSize}")
     public Result<PageInfo<SysUser>> findByPage(SysUserDto sysUserDto,
                                                 @PathVariable(value = "pageNum") Integer pageNum,
@@ -29,7 +31,8 @@ public class SysUserController {
         return Result.build(pageInfo, ResultCodeEnum.SUCCESS);
     }
 
-    //添加用户
+    //添加用户、
+    @Operation(summary = "用户保存")
     @PostMapping( "/saveSysUser")
     public Result saveSysUser(@RequestBody SysUser sysUser) {
         sysUserService.saveSysUser(sysUser) ;
@@ -37,12 +40,14 @@ public class SysUserController {
     }
 
     //更新用户数据
+    @Operation(summary = "用户更新")
     @PutMapping("/updateSysUser")
     public Result updateSysUser(@RequestBody SysUser sysUser) {
         sysUserService.updateSysUser(sysUser) ;
         return Result.build(null , ResultCodeEnum.SUCCESS) ;
     }
 
+    @Operation(summary = "删除用户")
     @DeleteMapping("/deleteById/{userId}")
     public Result deleteById(@PathVariable(value = "userId")Long userId){
         sysUserService.deleteById(userId) ;
