@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.spzx.manager.mapper.SysMenuMapper">
+
+    <resultMap id="sysMenuMap" type="com.atguigu.spzx.model.entity.system.SysMenu" autoMapping="true"></resultMap>
+
+    <sql id="columns">
+        id
+        ,parent_id,title,component,sort_value,status,is_deleted
+    </sql>
+
+    <!--    保存 -->
+<!--    useGeneratedKeys则允许 JDBC 支持自动生成主键，并可将自动生成的主键返回 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_menu (
+            id,
+            parent_id,
+            title,
+            component,
+            sort_value,
+            status
+        ) values (
+                     #{id},
+                     #{parentId},
+                     #{title},
+                     #{component},
+                     #{sortValue},
+                     #{status}
+                 )
+    </insert>
+
+
+
+    <!--    获取所有菜单的方法-->
+    <select id="selectAll" resultType="com.atguigu.spzx.model.entity.system.SysMenu">
+        select
+        <include refid="columns"/>
+        from sys_menu
+        where is_deleted=0
+        order by sort_value
+    </select>
+
+
+</mapper>

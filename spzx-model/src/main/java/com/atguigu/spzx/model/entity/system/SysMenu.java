@@ -29,4 +29,5 @@ public class SysMenu extends BaseEntity {
 	@Schema(description = "子节点")
 	private List<SysMenu> children;
 
+
 }
