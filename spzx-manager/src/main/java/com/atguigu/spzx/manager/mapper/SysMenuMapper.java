@@ -13,4 +13,6 @@ public interface SysMenuMapper {
     List<SysMenu> selectAll();
 
     void save( SysMenu sysMenu);
+
+    void updateById(SysMenu sysMenu);
 }

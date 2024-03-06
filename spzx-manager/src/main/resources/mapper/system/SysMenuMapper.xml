@@ -11,25 +11,46 @@
     </sql>
 
     <!--    保存 -->
-<!--    useGeneratedKeys则允许 JDBC 支持自动生成主键，并可将自动生成的主键返回 -->
+    <!--    useGeneratedKeys则允许 JDBC 支持自动生成主键，并可将自动生成的主键返回 -->
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
-        insert into sys_menu (
-            id,
-            parent_id,
-            title,
-            component,
-            sort_value,
-            status
-        ) values (
-                     #{id},
-                     #{parentId},
-                     #{title},
-                     #{component},
-                     #{sortValue},
-                     #{status}
-                 )
+        insert into sys_menu (id,
+                              parent_id,
+                              title,
+                              component,
+                              sort_value,
+                              status)
+        values (#{id},
+                #{parentId},
+                #{title},
+                #{component},
+                #{sortValue},
+                #{status})
     </insert>
 
+
+    <!--    修改菜单-->
+    <update id="updateById">
+        update sys_menu
+        set
+        <if test="parentId != null and parentId !=''">
+            parent_id=#{parentId},
+        </if>
+        <if test="title != null and title !=''">
+            title=#{title},
+        </if>
+        <if test="component != null and component !=''">
+            component=#{component},
+        </if>
+        <if test="sortValue != null ">
+            sort_value=#{sortValue},
+        </if>
+        <if test="status != null ">
+            status=#{status},
+        </if>
+        update_time=now()
+        where id =#{id}
+
+    </update>
 
 
     <!--    获取所有菜单的方法-->

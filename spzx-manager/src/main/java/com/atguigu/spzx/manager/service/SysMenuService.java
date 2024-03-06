@@ -8,4 +8,6 @@ public interface SysMenuService {
     List<SysMenu> findNodes();
 
     void save(SysMenu sysMenu);
+
+    void updateById(SysMenu sysMenu);
 }
