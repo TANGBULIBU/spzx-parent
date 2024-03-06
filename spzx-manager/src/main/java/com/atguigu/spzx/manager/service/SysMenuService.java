@@ -5,6 +5,7 @@ import com.atguigu.spzx.model.entity.system.SysMenu;
 import java.util.List;
 
 public interface SysMenuService {
+    //查询所有的数据
     List<SysMenu> findNodes();
 
     void save(SysMenu sysMenu);

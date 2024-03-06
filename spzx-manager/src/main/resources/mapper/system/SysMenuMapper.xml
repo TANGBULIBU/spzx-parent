@@ -6,8 +6,7 @@
     <resultMap id="sysMenuMap" type="com.atguigu.spzx.model.entity.system.SysMenu" autoMapping="true"></resultMap>
 
     <sql id="columns">
-        id
-        ,parent_id,title,component,sort_value,status,is_deleted
+        id,parent_id,title,component,sort_value,status,create_time,update_time,is_deleted
     </sql>
 
     <!--    保存 -->
