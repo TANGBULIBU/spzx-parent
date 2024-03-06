@@ -6,7 +6,6 @@ import com.atguigu.spzx.model.dto.system.SysRoleDto;
 import com.atguigu.spzx.model.entity.system.SysRole;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,14 +54,17 @@ public class SysRoleServiceImpl implements SysRoleService {
 
 
     @Override
-    public Map<String, Object> findAllRoles() {
+    public Map<String, Object> findAllRoles(Long userId) {
         //使用List接收
-        List<SysRole> sysRoles =
-                sysRoleMapper.findAllroles();
+        List<SysRole> sysRolesList =
+                sysRoleMapper.findAllRoles();
+
+        List<Long> sysRoles=sysRoleMapper.findSysUserRoleByUserId(userId);
 
         Map<String ,Object> map=new HashMap<>();
         //将list插入map中
-        map.put("allRolesList",sysRoles);
+        map.put("allRolesList",sysRolesList);
+        map.put("sysUserRoles",sysRoles);
         return map;
     }
 

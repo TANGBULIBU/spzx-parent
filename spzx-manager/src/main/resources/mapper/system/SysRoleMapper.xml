@@ -53,11 +53,16 @@
     </select>
 
     <!--    查询所有的角色 例如管理员等-->
-    <select id="findAllroles" resultType="com.atguigu.spzx.model.entity.system.SysRole">
+    <select id="findAllRoles" resultType="com.atguigu.spzx.model.entity.system.SysRole">
         select
         <include refid="columns"/>
         from sys_role where is_deleted=0
 
+    </select>
+
+<!--    查询指定的用户对应的数据-->
+    <select id="findSysUserRoleByUserId" resultType="java.lang.Long">
+        select role_id from sys_user_role where user_id=#{userId}
     </select>
 
 </mapper>
