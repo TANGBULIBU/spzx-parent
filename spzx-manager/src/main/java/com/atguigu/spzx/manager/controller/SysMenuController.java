@@ -40,4 +40,11 @@ public class SysMenuController {
         return Result.build(null , ResultCodeEnum.SUCCESS) ;
     }
 
+    @Operation(summary = "删除菜单")
+    @DeleteMapping("/removeById/{id}")
+    public Result removeById(@PathVariable(value = "id") Long id) {
+        sysMenuService.removeById(id);
+        return Result.build(null , ResultCodeEnum.SUCCESS) ;
+    }
+
 }

@@ -10,4 +10,6 @@ public interface SysMenuService {
     void save(SysMenu sysMenu);
 
     void updateById(SysMenu sysMenu);
+
+    void removeById(Long id);
 }

@@ -15,4 +15,8 @@ public interface SysMenuMapper {
     void save( SysMenu sysMenu);
 
     void updateById(SysMenu sysMenu);
+
+    void removeById(Long id);
+
+    int countByParentId(Long id);
 }

@@ -52,6 +52,14 @@
 
     </update>
 
+    <!--    删除菜单操作  假删除 将is_delted=1-->
+    <update id="removeById">
+        update sys_menu
+        set update_time=now(),
+            is_deleted=1
+        where id = #{id}
+    </update>
+
 
     <!--    获取所有菜单的方法-->
     <select id="selectAll" resultType="com.atguigu.spzx.model.entity.system.SysMenu">
@@ -60,6 +68,15 @@
         from sys_menu
         where is_deleted=0
         order by sort_value
+    </select>
+
+    <!--    查询是否存在子菜单 通过parentId寻找是否有对应的子菜单-->
+    <select id="countByParentId" resultType="java.lang.Integer">
+        select count(id)
+        from sys_menu
+        where parent_id = #{parentId}
+          and is_deleted = 0
+
     </select>
 
 
