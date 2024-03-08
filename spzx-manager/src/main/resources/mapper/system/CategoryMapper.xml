@@ -9,13 +9,35 @@
         ,name,image_url,parent_id,status,order_num,create_time,update_time,is_deleted
     </sql>
 
+    <!--    导入excel内容 将数据写入到mysql中-->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" >
+        insert into category (
+        id,
+        name,
+        image_url,
+        parent_id,
+        status,
+        order_num
+        ) values
+        <foreach collection="categoryList" item="item" separator="," >
+            (
+            #{item.id},
+            #{item.name},
+            #{item.imageUrl},
+            #{item.parentId},
+            #{item.status},
+            #{item.orderNum}
+            )
+        </foreach>
+    </insert>
+
 
     <!--    计算数量-->
     <select id="countByParentId" resultType="java.lang.Integer">
         select count(id)
         from category
         where parent_id = #{parentId}
-        and is_deleted = 0
+          and is_deleted = 0
     </select>
 
     <!--    查询所有-->
@@ -26,6 +48,15 @@
         where parent_id = #{parentId}
         and is_deleted = 0
         order by id desc
+    </select>
+
+    <!--    查询所有-->
+    <select id="selectAll" resultType="com.atguigu.spzx.model.entity.product.Category">
+        select
+        <include refid="columns"/>
+        from category
+        where is_deleted=0
+        order by id
     </select>
 
 </mapper>
