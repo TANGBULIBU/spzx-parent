@@ -18,7 +18,6 @@
         </foreach>
     </insert>
 
-
     <!--    查询当前角色的菜单数据  -->
     <select id="findSysRoleMenuByRoleId" resultType="java.lang.Long">
         select menu_id

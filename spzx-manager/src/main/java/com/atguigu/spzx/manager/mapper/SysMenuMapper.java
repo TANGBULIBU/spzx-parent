@@ -19,4 +19,6 @@ public interface SysMenuMapper {
     void removeById(Long id);
 
     int countByParentId(Long id);
+
+    List<SysMenu> selectListByUserId(Long id);
 }
