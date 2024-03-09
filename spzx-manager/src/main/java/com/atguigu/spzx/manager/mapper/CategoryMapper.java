@@ -14,5 +14,5 @@ public interface CategoryMapper {
 
     List<Category> selectAll();
 
-    void save(List<Category> categoryList);
+    void save(List cachedDataList);
 }

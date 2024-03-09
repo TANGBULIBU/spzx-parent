@@ -19,7 +19,7 @@
         status,
         order_num
         ) values
-        <foreach collection="categoryList" item="item" separator="," >
+        <foreach collection="cachedDataList" item="item" separator="," >
             (
             #{item.id},
             #{item.name},
