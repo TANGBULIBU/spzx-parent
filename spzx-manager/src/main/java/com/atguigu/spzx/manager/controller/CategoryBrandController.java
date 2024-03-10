@@ -9,10 +9,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "分类品牌列表")
 @RestController
@@ -29,4 +26,26 @@ public class CategoryBrandController {
         PageInfo<CategoryBrand> pageInfo = categoryBrandService.findByPage(page, limit, CategoryBrandDto);
         return Result.build(pageInfo , ResultCodeEnum.SUCCESS) ;
     }
+
+    @Operation(summary = "添加功能")
+    @PostMapping("/save")
+    public Result save(@RequestBody CategoryBrand categoryBrand){
+        categoryBrandService.save(categoryBrand);
+        return Result.build(null,ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "修改功能")
+    @PutMapping("/updateById")
+    public Result updateById(@RequestBody CategoryBrand categoryBrand){
+        categoryBrandService.updateById(categoryBrand);
+        return Result.build(null,ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "删除功能")
+    @DeleteMapping("/deleteById/{id}")
+    public Result deleteById(@PathVariable Long id){
+        categoryBrandService.deleteById(id);
+        return Result.build(null,ResultCodeEnum.SUCCESS);
+    }
+
 }
