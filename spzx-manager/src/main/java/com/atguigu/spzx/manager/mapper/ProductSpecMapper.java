@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface ProductSpecMapper {
+public interface ProductSpecMapper  {
 
 
     List<ProductSpec> findByPage();
@@ -16,4 +16,6 @@ public interface ProductSpecMapper {
     void updateById(ProductSpec productSpec);
 
     void deleteById(Long id);
+
+    List<ProductSpec> findAll();
 }

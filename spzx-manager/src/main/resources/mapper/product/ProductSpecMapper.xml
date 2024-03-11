@@ -49,5 +49,13 @@
         order by id desc
     </select>
 
+<!--    加载商品规格数据-->
+    <select id="findAll" resultType="com.atguigu.spzx.model.entity.product.ProductSpec">
+        select <include refid="columns" />
+        from product_spec
+        where is_deleted = 0
+        order by id desc
+    </select>
+
 
 </mapper>

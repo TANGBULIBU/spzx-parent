@@ -11,15 +11,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductSpecServiceImpl implements ProductSpecService {
+public class ProductSpecServiceImpl  implements ProductSpecService {
+//public class ProductSpecServiceImpl extends ServiceImpl<ProductSpecMapper,ProductSpec> implements ProductSpecService {
 
     @Autowired
     private ProductSpecMapper productSpecMapper;
 
     @Override
     public PageInfo<ProductSpec> findByPage(Integer page, Integer limit) {
-        PageHelper.startPage(page,limit);
-        List<ProductSpec> productSpecsList= productSpecMapper.findByPage();
+        PageHelper.startPage(page, limit);
+        List<ProductSpec> productSpecsList = productSpecMapper.findByPage();
 
         return new PageInfo<>(productSpecsList);
     }
@@ -38,4 +39,12 @@ public class ProductSpecServiceImpl implements ProductSpecService {
     public void deleteById(Long id) {
         productSpecMapper.deleteById(id);
     }
+
+    @Override
+    public List<ProductSpec> findAll() {
+
+        return  productSpecMapper.findAll();
+    }
 }
+
+

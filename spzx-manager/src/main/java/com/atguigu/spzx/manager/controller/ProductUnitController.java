@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "商品单元数据")
 @RestController
@@ -24,7 +25,7 @@ public class ProductUnitController {
     @Operation(summary = "加载数据")
     @GetMapping("/findAll")
     public Result<List<ProductUnit>> findAll(){
-        List<ProductUnit> productUnitList = productUnitService.findAll();
+        List<Map<String ,Object>> productUnitList = productUnitService.listAll();
         return Result.build(productUnitList , ResultCodeEnum.SUCCESS) ;
     }
 

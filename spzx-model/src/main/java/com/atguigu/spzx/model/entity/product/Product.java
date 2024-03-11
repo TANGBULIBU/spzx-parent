@@ -44,6 +44,7 @@ public class Product extends BaseEntity {
 	private String auditMessage;			// 审核信息
 
 	// 扩展的属性，用来封装响应的数据
+//	@TableField(exist = false) 取消字段拼接
 	@Schema(description = "品牌名称")
 	private String brandName;				// 品牌
 
