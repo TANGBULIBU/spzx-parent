@@ -45,11 +45,12 @@
         where id=#{id};
     </update>
 
-<!--    删除功能-->
+    <!--    删除功能-->
     <update id="deleteById">
         update category_brand
-        set update_time = now(),is_deleted=1
-        where id=#{id};
+        set update_time = now(),
+            is_deleted=1
+        where id = #{id};
 
     </update>
 
@@ -64,6 +65,16 @@
         left join category c on c.id = cb.category_id
         left join brand b on b.id = cb.brand_id
         <include refid="findPageWhere"/>
+        order by cb.id desc
+    </select>
+
+    <!--    加载品牌数据-->
+    <select id="findBrandByCategoryId" resultType="com.atguigu.spzx.model.entity.product.Brand">
+        select b.*
+        from category_brand cb
+                 left join brand b on b.id = cb.brand_id
+        where cb.category_id = #{categoryId}
+          and cb.is_deleted = 0
         order by cb.id desc
     </select>
 
