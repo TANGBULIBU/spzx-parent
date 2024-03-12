@@ -1,6 +1,7 @@
 package com.atguigu.spzx.model.entity.product;
 
 import com.atguigu.spzx.model.entity.base.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -44,22 +45,27 @@ public class Product extends BaseEntity {
 	private String auditMessage;			// 审核信息
 
 	// 扩展的属性，用来封装响应的数据
-//	@TableField(exist = false) 取消字段拼接
+	@TableField(exist = false) //取消字段拼接
 	@Schema(description = "品牌名称")
 	private String brandName;				// 品牌
 
+	@TableField(exist = false)
 	@Schema(description = "一级分类名称")
 	private String category1Name;			// 一级分类
 
+	@TableField(exist = false)
 	@Schema(description = "二级分类名称")
 	private String category2Name;			// 二级分类
 
+	@TableField(exist = false)
 	@Schema(description = "三级分类名称")
 	private String category3Name;			// 三级分类
 
+	@TableField(exist = false)
 	@Schema(description = "sku列表集合")
 	private List<ProductSku> productSkuList;		// sku列表集合
 
+	@TableField(exist = false)
 	@Schema(description = "图片详情列表")
 	private String detailsImageUrls;				// 图片详情列表
 
