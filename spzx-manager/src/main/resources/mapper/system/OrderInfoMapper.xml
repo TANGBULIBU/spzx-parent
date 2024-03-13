@@ -2,9 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.spzx.manager.mapper.OrderInfoMapper">
 
-<!-- -->
-    <insert id="insertStatisticsRecord">
-
-
-    </insert>
+<!--根据选中时间范围 返回数据 -->
+    <select id="selectStatistics" resultType="com.atguigu.spzx.model.entity.order.OrderStatistics">
+        SELECT DATE_FORMAT(oi.create_time ,'%Y-%m-%d') orderDate, SUM(oi.`total_amount`) totalAmount, COUNT(oi.id) totalNum
+        FROM order_info oi
+        WHERE DATE_FORMAT(oi.create_time ,'%Y-%m-%d') = #{orderCreateTime} AND oi.is_deleted = 0
+    </select>
 </mapper>
