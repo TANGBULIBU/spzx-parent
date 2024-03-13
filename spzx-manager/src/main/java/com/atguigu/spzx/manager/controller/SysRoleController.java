@@ -1,5 +1,7 @@
 package com.atguigu.spzx.manager.controller;
 
+import com.atguigu.spzx.common.log.annotation.Log;
+import com.atguigu.spzx.common.log.enums.OperatorType;
 import com.atguigu.spzx.manager.service.SysRoleService;
 import com.atguigu.spzx.model.dto.system.SysRoleDto;
 import com.atguigu.spzx.model.entity.system.SysRole;
@@ -21,6 +23,7 @@ public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
 
+    @Log(title = "添加角色",businessType = 0)
     @Operation(summary = "查找分页数据")
     @PostMapping("/findByPage/{pageNum}/{pageSize}")
     //一个请求体 两个路径传参
@@ -35,7 +38,6 @@ public class SysRoleController {
 
 
     //新增角色 也就是保存用户信息
-
     @Operation(summary = "新增角色")
     @PostMapping("/saveSysRole")
     public Result saveSysRole(@RequestBody SysRole sysRole) {

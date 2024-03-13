@@ -1,5 +1,7 @@
 package com.atguigu.spzx.manager.controller;
 
+import com.atguigu.spzx.common.log.annotation.Log;
+import com.atguigu.spzx.common.log.enums.OperatorType;
 import com.atguigu.spzx.manager.service.BrandService;
 import com.atguigu.spzx.model.entity.product.Brand;
 import com.atguigu.spzx.model.vo.common.Result;
@@ -19,7 +21,6 @@ public class BrandController {
 
     @Autowired
     private BrandService brandService ;
-
     @Operation(summary = "菜单添加")
     @GetMapping("/{page}/{limit}")
     public Result<PageInfo<Brand>> findByPage(@PathVariable Integer page, @PathVariable Integer limit) {
@@ -35,6 +36,7 @@ public class BrandController {
         return Result.build(null , ResultCodeEnum.SUCCESS) ;
     }
 
+    @Log(title = "修改品牌",businessType = 2,operatorType = OperatorType.MANAGE)
     @Operation(summary = "修改品牌")
     @PutMapping("/updateById")
     public Result updateById(@RequestBody Brand brand) {
@@ -42,6 +44,7 @@ public class BrandController {
         return Result.build(null , ResultCodeEnum.SUCCESS) ;
     }
 
+    @Log(title = "品牌列表",businessType = 3,operatorType = OperatorType.MANAGE)
     @Operation(summary = "删除品牌")
     @DeleteMapping("/deleteById/{id}")
     public Result deleteById(@PathVariable Long id) {
