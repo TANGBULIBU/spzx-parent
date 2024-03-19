@@ -1,37 +1,52 @@
 package com.atguigu.spzx.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.spzx.model.entity.product.Category;
 import com.atguigu.spzx.product.mapper.CategoryMapper;
 import com.atguigu.spzx.product.service.CategoryService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
+    @Autowired
+    private RedisTemplate<String , String> redisTemplate ;
+
+    @Autowired
+    private  CategoryMapper categoryMapper;
     @Override
     public List<Category> findOneCategory() {
 
-        /*select
-        id,
-        name,
-        image_url,
-        parent_id,
-        status,
-        order_num,
-        create_time,
-        update_time,
-        is_deleted
-        from category
+        /*
         where
         parent_id = 0
         and status = 1
         and is_deleted = 0
         order by order_num*/
+
+
+
+
+
+
+        //从redis中查询所有的一级分类数据
+        String categoryListJSON = redisTemplate.opsForValue().get("category:one");
+        //从redis中获取数据 如果访问的内容存在 就从中获取查询
+        if(!StringUtils.isEmpty(categoryListJSON)) {
+            List<Category> categoryList = JSON.parseArray(categoryListJSON, Category.class);
+            System.out.println("从Redis缓存中查询到了所有的一级分类数据");
+            return categoryList ;
+        }
+
         LambdaQueryWrapper<Category> categoryQueryWrapper = new LambdaQueryWrapper<>();
 //        使用stream流对条件进行筛选 获取品牌的parentId=0  和status=1的相关数据
         categoryQueryWrapper
@@ -39,7 +54,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 .eq(Category::getStatus, 1)
                 .orderByAsc(Category::getOrderNum);
 
-        return baseMapper.selectList(categoryQueryWrapper);
+        /*
+        从数据库中查询所有的一级分类数据
+         */
+        List<Category> categories = baseMapper.selectList(categoryQueryWrapper);
+        System.out.println("从数据库中查询到所有的一级分类");
+        redisTemplate.opsForValue().set("category:one", JSON.toJSONString(categories),7, TimeUnit.DAYS);
+        return categories;
+
+
+
     }
 
     //    获取分类树形数据
