@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Knife4jConfig {
 
+    /***
+     * @description 创建api接口
+     */
     @Bean
     public GroupedOpenApi adminApi() {      // 创建了一个api接口的分组
         return GroupedOpenApi.builder()
@@ -30,5 +33,16 @@ public class Knife4jConfig {
                         .version("1.0")
                         .description("尚品甑选API接口文档")
                         .contact(new Contact().name("atguigu"))); // 设定作者
+    }
+
+    /***
+     * @description 创建分组
+     */
+    @Bean
+    public GroupedOpenApi webApi() {      // 创建了一个api接口的分组
+        return GroupedOpenApi.builder()
+                .group("web-api")         // 分组名称
+                .pathsToMatch("/api/**")  // 接口请求路径规则
+                .build();
     }
 }
