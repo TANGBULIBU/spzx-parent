@@ -7,6 +7,7 @@ import com.atguigu.spzx.product.service.CategoryService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
     @Autowired
     private RedisTemplate<String , String> redisTemplate ;
@@ -32,11 +34,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         and status = 1
         and is_deleted = 0
         order by order_num*/
-
-
-
-
-
 
         //从redis中查询所有的一级分类数据
         String categoryListJSON = redisTemplate.opsForValue().get("category:one");
@@ -61,13 +58,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         System.out.println("从数据库中查询到所有的一级分类");
         redisTemplate.opsForValue().set("category:one", JSON.toJSONString(categories),7, TimeUnit.DAYS);
         return categories;
-
-
-
     }
 
     //    获取分类树形数据
     @Override
+    //添加cache缓存技术注解
+    @Cacheable(value = "category" , key = "'all'")
     public List<Category> findCategoryTree() {
         //从数据库获取状态为1的全部信息
         LambdaQueryWrapper<Category> categoryLambdaQueryWrapper = new LambdaQueryWrapper<Category>()
@@ -94,7 +90,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                         category2.setChildren(categoryList2);
                     });
                 }
-
             });
         }
 
