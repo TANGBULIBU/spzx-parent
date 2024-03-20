@@ -6,32 +6,85 @@
     <resultMap id="productSkuMap" type="com.atguigu.spzx.model.entity.product.ProductSku" autoMapping="true">
     </resultMap>
 
+    <!--  查询畅销商品列表  -->
     <select id="findProductSkuBySale" resultMap="productSkuMap">
-        select
-            sku.id,
-            sku.sku_code,
-            sku.sku_name,
-            sku.product_id,
-            sku.thumb_img,
-            sku.sale_price,
-            sku.market_price,
-            sku.cost_price,
-            sku.stock_num,
-            sku.sale_num,
-            sku.sku_spec,
-            sku.weight,
-            sku.volume,
-            sku.status,
-            sku.create_time,
-            sku.update_time,
-            sku.is_deleted
+        select sku.id,
+               sku.sku_code,
+               sku.sku_name,
+               sku.product_id,
+               sku.thumb_img,
+               sku.sale_price,
+               sku.market_price,
+               sku.cost_price,
+               sku.stock_num,
+               sku.sale_num,
+               sku.sku_spec,
+               sku.weight,
+               sku.volume,
+               sku.status,
+               sku.create_time,
+               sku.update_time,
+               sku.is_deleted
         from product_sku sku
                  left join product p on p.id = sku.product_id
         where p.status = 1
           and p.audit_status = 1
           and sku.is_deleted = 0
           and p.is_deleted = 0
-        order by sku.sale_num desc
-            limit 20
+        order by sku.sale_num desc limit 20
+    </select>
+
+    <!-- 分页查询商品列表   -->
+    <select id="findByPage" resultMap="productSkuMap">
+        select
+        sku.id,
+        sku.sku_code,
+        sku.sku_name,
+        sku.product_id,
+        sku.thumb_img,
+        sku.sale_price,
+        sku.market_price,
+        sku.cost_price,
+        sku.stock_num,
+        sku.sale_num,
+        sku.sku_spec,
+        sku.weight,
+        sku.volume,
+        sku.status,
+        sku.create_time,
+        sku.update_time,
+        sku.is_deleted
+        from product_sku sku
+        left join product p on p.id = sku.product_id
+        <where>
+            <if test="productSkuDto.keyword != null and productSkuDto.keyword != ''">
+                and sku.sku_name like CONCAT('%',#{productSkuDto.keyword},'%')
+            </if>
+            <if test="productSkuDto.brandId != null">
+                and p.brand_id = #{productSkuDto.brandId}
+            </if>
+            <if test="productSkuDto.category1Id != null">
+                and p.category1_id = #{productSkuDto.category1Id}
+            </if>
+            <if test="productSkuDto.category2Id != null">
+                and p.category2_id = #{productSkuDto.category2Id}
+            </if>
+            <if test="productSkuDto.category3Id != null">
+                and p.category3_id = #{productSkuDto.category3Id}
+            </if>
+            and p.status = 1
+            and p.audit_status = 1
+            and sku.is_deleted = 0
+            and p.is_deleted = 0
+        </where>
+        <if test="productSkuDto.order == 1">
+            order by sku.sale_num desc
+        </if>
+        <if test="productSkuDto.order == 2">
+            order by sku.sale_price asc
+        </if>
+        <if test="productSkuDto.order == 3">
+            order by sku.sale_price desc
+        </if>
     </select>
 </mapper>
