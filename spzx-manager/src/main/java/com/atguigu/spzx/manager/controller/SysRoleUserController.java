@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/system/sysRoleUser")
-public class SysRoleUserController {
+public class  SysRoleUserController {
 
     @Autowired
     private SysRoleUserService sysRoleUserService;

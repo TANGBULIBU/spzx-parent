@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "商品列表管理")
 @RestController
-@RequestMapping(value="/api/product")
+@RequestMapping(value="/api/product/productsku")
 public class ProductSkuController {
 
     @Autowired

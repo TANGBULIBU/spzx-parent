@@ -26,6 +26,7 @@ spring:
             allowedMethods: "*"
             # 跨域检测的有效期,单位s
             maxAge: 36000
+#            微服务的路由配置
       routes:
         - id: service-product
           uri: lb://service-product
