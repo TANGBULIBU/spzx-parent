@@ -30,7 +30,10 @@ public class SmsServiceImpl implements SmsService {
 
         //随机生成验证码
         String validateCode = RandomStringUtils.randomNumeric(4);      // 生成验证码
-        sendSms(phone , validateCode) ;
+//        String validateCode = "6666";
+
+//        sendSms(phone , validateCode) ;
+
         //将验证码 存入redis 有效期时5分钟
         redisTemplate.opsForValue().set("phone:code:" + phone , validateCode , 5 , TimeUnit.MINUTES);
     }
@@ -40,7 +43,7 @@ public class SmsServiceImpl implements SmsService {
         String host = "https://dfsns.market.alicloudapi.com";
         String path = "/data/send_sms";
         String method = "POST";
-        String appcode = "938a8491cea74e43a48edf0a67070051";
+        String appcode = "db832fe038b64a30a2589e11288b9892";
         Map<String, String> headers = new HashMap<String, String>();
         //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
         headers.put("Authorization", "APPCODE " + appcode);
