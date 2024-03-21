@@ -1,10 +1,13 @@
 package com.atguigu.spzx.user.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.nacos.common.utils.StringUtils;
 import com.atguigu.spzx.common.exception.GuiguException;
+import com.atguigu.spzx.model.dto.h5.UserLoginDto;
 import com.atguigu.spzx.model.dto.h5.UserRegisterDto;
 import com.atguigu.spzx.model.entity.user.UserInfo;
 import com.atguigu.spzx.model.vo.common.ResultCodeEnum;
+import com.atguigu.spzx.model.vo.h5.UserInfoVo;
 import com.atguigu.spzx.user.mapper.UserInfoMapper;
 import com.atguigu.spzx.user.service.UserInfoService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -13,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author 77943
@@ -77,6 +83,56 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
 
         // 删除Redis中的数据
         redisTemplate.delete("phone:code:" + username) ;
+    }
+
+//   登录
+    @Override
+    public String login(UserLoginDto userLoginDto, String ipAddr) {
+        //根据用户名查询用户数据
+        UserInfo byUsername = baseMapper.getByUsername(userLoginDto.getUsername());
+        //如果用户名为空 就返回登录失败
+        if(byUsername == null){
+            throw new GuiguException(ResultCodeEnum.LOGIN_ERROR);
+        }
+
+        //通过UserName获取它的password 与用户输入得值是否相同
+        if (!byUsername.getPassword().equals(DigestUtils.md5DigestAsHex(userLoginDto.getPassword().getBytes()))){
+            throw new GuiguException(ResultCodeEnum.LOGIN_PASSWORD_ERROR);
+        }
+
+        //是否被禁用
+        if(byUsername.getStatus() == 0){
+            throw new GuiguException(ResultCodeEnum.ACCOUNT_STOP);
+        }
+
+        //生成token
+        String token = UUID.randomUUID().toString().replaceAll("-", "");
+        //将token存入redis 将信息以json存入
+        redisTemplate.opsForValue().set("user:login:"+token, JSON.toJSONString(byUsername),30, TimeUnit.DAYS);
+
+        return token;
+    }
+
+    /*
+    获取当前用户信息 nickname avatar
+     */
+    @Override
+    public UserInfoVo getCurrentUserInfo(String token) {
+        //从redis中获取相关用户得token
+        String userInfoJson = redisTemplate.opsForValue().get("user:login:"+token);
+        //如果没有token 就返回登录失败
+        if(StringUtils.isEmpty(userInfoJson)){
+            throw new GuiguException(ResultCodeEnum.LOGIN_AUTH);
+        }
+
+        //将用户信息从json转为UserInfo对象
+        UserInfo userInfo = JSON.parseObject(userInfoJson, UserInfo.class);
+
+        //封装信息 到vo类中
+        UserInfoVo userInfoVo = new UserInfoVo();
+        userInfoVo.setAvatar(userInfo.getAvatar());
+        userInfoVo.setNickName(userInfo.getNickName());
+        return userInfoVo;
     }
 }
 
