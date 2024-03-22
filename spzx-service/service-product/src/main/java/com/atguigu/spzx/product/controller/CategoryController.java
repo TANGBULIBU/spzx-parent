@@ -30,6 +30,4 @@ public class CategoryController {
         List<Category> list = categoryService.findCategoryTree();
         return Result.build(list, ResultCodeEnum.SUCCESS);
     }
-
-
 }

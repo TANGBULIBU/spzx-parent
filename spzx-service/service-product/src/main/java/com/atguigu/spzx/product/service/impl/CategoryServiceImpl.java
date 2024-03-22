@@ -1,6 +1,7 @@
 package com.atguigu.spzx.product.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.nacos.common.utils.StringUtils;
 import com.atguigu.spzx.model.entity.product.Category;
 import com.atguigu.spzx.product.mapper.CategoryMapper;
 import com.atguigu.spzx.product.service.CategoryService;
@@ -11,7 +12,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -23,8 +23,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Autowired
     private RedisTemplate<String , String> redisTemplate ;
 
-    @Autowired
-    private  CategoryMapper categoryMapper;
+
     @Override
     public List<Category> findOneCategory() {
 
@@ -38,7 +37,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         //从redis中查询所有的一级分类数据
         String categoryListJSON = redisTemplate.opsForValue().get("category:one");
         //从redis中获取数据 如果访问的内容存在 就从中获取查询
-        if(!StringUtils.isEmpty(categoryListJSON)) {
+        if(!StringUtils.isEmpty(categoryListJSON)){
             List<Category> categoryList = JSON.parseArray(categoryListJSON, Category.class);
             System.out.println("从Redis缓存中查询到了所有的一级分类数据");
             return categoryList ;
@@ -73,26 +72,30 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<Category> categories = baseMapper.selectList(categoryLambdaQueryWrapper);
 
         //获取第一个级别的分类信息
-//        filter()方法对Stream中的元素进行筛选，条件是元素的parentId属性的long值等于0。最后使用collect()方法将筛选结果收集到一个新的List中并返
+//        filter()方法对Stream中的元素进行筛选，条件是元素的parentId属性的long值等于0。
+//        最后使用collect()方法将筛选结果收集到一个新的List中并返回
         List<Category> collectsList= categories.stream()
                 .filter(item -> item.getParentId().longValue() == 0)
                 .collect(Collectors.toList());
 
-        if (!CollectionUtils.isEmpty(categories)) {
-            categories.forEach(category -> {
+        if (!CollectionUtils.isEmpty(collectsList)) {
+            collectsList.forEach(category -> {
+        //获取第二个级别的分类信息
                 List<Category> collectsList1 = categories.stream()
-                        .filter(item -> item.getParentId()
-                                .longValue() == category.getId().longValue()).collect(Collectors.toList());
+                        .filter(item -> item.getParentId().longValue() == category.getId().longValue())
+                        .collect(Collectors.toList());
+                category.setChildren(collectsList1);
                 //获取第三个级别的分类信息
                 if (!CollectionUtils.isEmpty(collectsList1)) {
                     collectsList1.forEach(category2 -> {
-                        List<Category> categoryList2 = collectsList1.stream().filter(item -> item.getParentId().longValue() == category2.getId().longValue()).collect(Collectors.toList());
+                        List<Category> categoryList2 = categories.stream()
+                                .filter(item -> item.getParentId().longValue() == category2.getId().longValue())
+                                .collect(Collectors.toList());
                         category2.setChildren(categoryList2);
                     });
                 }
             });
         }
-
         return collectsList;
     }
 }
