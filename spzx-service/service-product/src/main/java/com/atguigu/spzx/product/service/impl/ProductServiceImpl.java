@@ -92,4 +92,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         productItemVo.setSpecValueList(specValueJsonArray);
         return productItemVo;
     }
+
+//    @Override
+//    public ProductSku getBySkuId(Long skuId) {
+//        return productSkuMapper.getById(skuId);
+//    }
 }

@@ -38,4 +38,11 @@ public class ProductSkuController {
         IPage<ProductSku> pageModel = productSkuService.findByPage(page, limit, productSkuDto);
         return Result.build(pageModel , ResultCodeEnum.SUCCESS) ;
     }
+
+    @Operation(summary = "获取商品sku信息")
+    @GetMapping("getBySkuId/{skuId}")
+    public ProductSku getBySkuId(@Parameter(name = "skuId", description = "商品skuId", required = true) @PathVariable Long skuId) {
+        ProductSku productSku = productSkuService.getById(skuId);
+        return productSku;
+    }
 }

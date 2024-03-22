@@ -10,6 +10,7 @@ import com.atguigu.spzx.model.vo.common.ResultCodeEnum;
 import com.atguigu.spzx.model.vo.h5.UserInfoVo;
 import com.atguigu.spzx.user.mapper.UserInfoMapper;
 import com.atguigu.spzx.user.service.UserInfoService;
+import com.atguigu.spzx.utils.AuthContextUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +119,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
      */
     @Override
     public UserInfoVo getCurrentUserInfo(String token) {
+        /*
+        使用了ThreadLocal后 将redis中token用户信息直接存入ThreadLocal中
         //从redis中获取相关用户得token
         String userInfoJson = redisTemplate.opsForValue().get("user:login:"+token);
         //如果没有token 就返回登录失败
@@ -127,6 +130,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
 
         //将用户信息从json转为UserInfo对象
         UserInfo userInfo = JSON.parseObject(userInfoJson, UserInfo.class);
+         */
+
+        //util工具类使用从ThreadLocal中获取相关信息
+        UserInfo userInfo = AuthContextUtil.getUserInfo();
 
         //封装信息 到vo类中
         UserInfoVo userInfoVo = new UserInfoVo();
