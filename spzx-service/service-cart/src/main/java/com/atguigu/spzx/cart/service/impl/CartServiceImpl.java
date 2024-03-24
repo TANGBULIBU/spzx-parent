@@ -144,6 +144,23 @@ public class CartServiceImpl implements CartService {
         redisTemplate.delete(cartKey);
     }
 
+    @Override
+    public List<CartInfo> getAllChecked() {
+        //获取所有选中的购物车
+        Long userId = AuthContextUtil.getUserInfo().getId();
+        String cartKey = getCartKey(userId);
+        //从redis中获取数据
+        List<Object> objectList = redisTemplate.opsForHash().values(cartKey);       // 获取所有的购物项数据
+        if (!CollectionUtils.isEmpty(objectList)) {
+            List<CartInfo> cartInfoList = objectList.stream()
+                    .map(cartInfoObj -> JSON.parseObject(cartInfoObj.toString(), CartInfo.class))
+                    .filter(cartInfo -> cartInfo.getIsChecked() == 1)
+                    .collect(Collectors.toList());
+            return cartInfoList;
+        }
+        return new ArrayList<>();
+    }
+
 
     //redis格式的转换
     private String getCartKey(Long userId) {

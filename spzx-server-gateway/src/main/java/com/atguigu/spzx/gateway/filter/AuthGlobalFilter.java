@@ -1,7 +1,7 @@
 package com.atguigu.spzx.gateway.filter;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.nacos.common.utils.StringUtils;
 import com.atguigu.spzx.model.entity.user.UserInfo;
 import com.atguigu.spzx.model.vo.common.Result;
@@ -13,6 +13,7 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,6 @@ import java.util.List;
  * <p>
  * 全局Filter，统一处理会员登录
  * </p>
- *
  */
 @Slf4j
 @Component
@@ -41,20 +41,21 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        //获取请求对象
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
-        log.info("path {}", path);
+        log.info("path {}" + path);
 
-        UserInfo userInfo = this.getUserInfo(request);
-        //api接口，异步请求，校验用户必须登录
-        if(antPathMatcher.match("/api/**/auth/**", path)) {
-            if(null == userInfo) {
+        //包含以下路径就需要登录才能访问
+        if (antPathMatcher.match("/api/**/auth/**", path)) {
+            UserInfo userInfo = getUserInfo(request);
+            if (userInfo==null){
                 log.info("没有权限");
                 ServerHttpResponse response = exchange.getResponse();
-                return out(response, ResultCodeEnum.LOGIN_AUTH);
+                return out(response,ResultCodeEnum.LOGIN_AUTH);
             }
         }
-
+        //放行
         return chain.filter(exchange);
     }
 
@@ -73,19 +74,21 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     }
 
     private UserInfo getUserInfo(ServerHttpRequest request) {
+        //登录接口，直接放行
+        HttpHeaders headers = request.getHeaders();
+        List<String> tokenList = headers.get("token");
         String token = "";
-        List<String> tokenList = request.getHeaders().get("token");
-        if(null  != tokenList) {
+        if (tokenList != null) {
             token = tokenList.get(0);
         }
-        if(!StringUtils.isEmpty(token)) {
-            String userInfoJSON = redisTemplate.opsForValue().get("user:login:"+token);
-            if(StringUtils.isEmpty(userInfoJSON)) {
-                return null ;
-            }else {
-                return JSON.parseObject(userInfoJSON , UserInfo.class) ;
-            }
+//            利用token从redis中获取信息
+        if (!StringUtils.isEmpty(token)) {
+            //返回的是json结果
+            String userInfoJson = redisTemplate.opsForValue().get("user:login:" + token);
+            UserInfo userInfo = JSON.parseObject(userInfoJson, UserInfo.class);
+            return userInfo;
         }
         return null;
+
     }
 }

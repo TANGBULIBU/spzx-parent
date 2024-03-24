@@ -69,4 +69,11 @@ public class CartController {
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }
 
+    @Operation(summary="选中的购物车")
+    @GetMapping(value = "/auth/getAllChecked")
+    public List<CartInfo> getAllChecked() {
+        List<CartInfo> cartInfoList = cartService.getAllChecked() ;
+        return cartInfoList;
+    }
+
 }
