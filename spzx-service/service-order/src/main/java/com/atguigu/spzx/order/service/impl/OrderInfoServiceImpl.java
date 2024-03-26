@@ -202,4 +202,28 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //返回分页对象
         return pageModel;
     }
+
+    @Override
+    public OrderInfo getByOrderNo(String orderNo) {
+        //根据订单获取订单
+        LambdaQueryWrapper<OrderInfo> orderInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        orderInfoLambdaQueryWrapper.eq(OrderInfo::getOrderNo, orderNo);
+        //一对一的关系
+        OrderInfo orderInfo = baseMapper.selectOne(orderInfoLambdaQueryWrapper);
+
+        //通过orderId获取orderItem列表
+        List<OrderItem> orderItemList = this.findOrderItemByOrderId(orderInfo);
+        orderInfo.setOrderItemList(orderItemList);
+
+        return orderInfo;
+    }
+
+    private List<OrderItem> findOrderItemByOrderId(OrderInfo orderInfo) {
+        Long orderInfoId = orderInfo.getId();
+        LambdaQueryWrapper<OrderItem> orderItemLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        orderItemLambdaQueryWrapper
+                .eq(OrderItem::getOrderId, orderInfoId)
+                .orderByDesc(OrderItem::getId);
+        return orderItemMapper.selectList(orderItemLambdaQueryWrapper);
+    }
 }

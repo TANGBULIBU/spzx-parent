@@ -14,6 +14,6 @@ public interface CartFeignClient {
     List<CartInfo> getAllChecked() ;
 
     @GetMapping(value = "/api/order/cart/auth/deleteChecked")
-    public abstract Result deleteChecked() ;
+     Result deleteChecked() ;
 
 }

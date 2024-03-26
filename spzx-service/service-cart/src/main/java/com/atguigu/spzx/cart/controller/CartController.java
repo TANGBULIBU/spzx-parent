@@ -76,6 +76,7 @@ public class CartController {
         return cartInfoList;
     }
 
+    //清空购结算后的购物车
     @GetMapping(value = "/auth/deleteChecked")
     public Result deleteChecked() {
         cartService.deleteChecked() ;
