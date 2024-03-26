@@ -12,4 +12,7 @@ public interface OrderFeignClient {
     @GetMapping("/api/order/orderInfo/auth/getOrderInfoByOrderNo/{orderNo}")
     Result<OrderInfo> getOrderInfoByOrderNo(@PathVariable("orderNo") String orderNo) ;
 
+    // 修改订单状态
+    @GetMapping("/api/order/orderInfo/auth/updateOrderStatusPayed/{orderNo}/{orderStatus}")
+    Result updateOrderStatus(@PathVariable(value = "orderNo") String orderNo , @PathVariable(value = "orderStatus") Integer orderStatus) ;
 }

@@ -6,4 +6,4 @@ spzx:
     alipay_public_key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArHTUw1pgza3+sFIovZXuilLON//KzmOoMZehYJsJt+qigjAIxEyeWJ36G8NKLpR2gBL3rCXlpDEsIyKqt6fOiAF2mAQHy6D9X3znY0vFxHQI5AuFke6jN/CyC/YpdTLXJjBQTBh3CWLVrlmYN7b1fTssQSmZXWw/uoS8k99MYfqFqB7qlLfrgBrQmb6zRYetzUnrW0/W3vK46f0k/FFWUhE2sQQUtuYpoe0F9Wf5lQWwb5B7GCWC5NMxupVjR5882kP/C4B73mqSEDoIiByd69f5vbNnNwAsDcMGkMXLd17oIuEnNwmqex1/HdwXLvPTiN+VaP3LTr5AmlzJ647ZbQIDAQAB
     return_payment_url: http://localhost/#/pages/money/paySuccess
 #    使用小米球的方式内网穿透
-    notify_payment_url: http://http://t05yq7d08mhu.ngrok.xiaomiqiu123.top/api/order/alipay/callback/notify
+    notify_payment_url: http://t05yq7d08mhu.ngrok.xiaomiqiu123.top/api/order/alipay/callback/notify

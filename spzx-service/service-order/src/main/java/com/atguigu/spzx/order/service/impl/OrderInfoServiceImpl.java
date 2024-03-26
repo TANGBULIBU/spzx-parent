@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -71,7 +72,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //计算总金额
         BigDecimal totalAmount = new BigDecimal(0);
         for (OrderItem orderItem : orderItemList) {
-             totalAmount = totalAmount.add(orderItem.getSkuPrice().multiply(new BigDecimal(orderItem.getSkuNum())));
+            totalAmount = totalAmount.add(orderItem.getSkuPrice().multiply(new BigDecimal(orderItem.getSkuNum())));
         }
         TradeVo tradeVo = new TradeVo();
         tradeVo.setTotalAmount(totalAmount);
@@ -91,11 +92,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         for (OrderItem orderItem : orderItemList) {
             ProductSku productSku = productFeignClient.getBySkuId(orderItem.getSkuId());
-            if(null == productSku) {
+            if (null == productSku) {
                 throw new GuiguException(ResultCodeEnum.DATA_ERROR);
             }
             //校验库存
-            if(orderItem.getSkuNum().intValue() > productSku.getStockNum().intValue()) {
+            if (orderItem.getSkuNum().intValue() > productSku.getStockNum().intValue()) {
                 throw new GuiguException(ResultCodeEnum.STOCK_LESS);
             }
         }
@@ -145,7 +146,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderLogMapper.insert(orderLog);
 
         // TODO 远程调用service-cart微服务接口清空购物车数据
-        cartFeignClient.deleteChecked() ;
+        cartFeignClient.deleteChecked();
         return orderInfo.getId();
     }
 
@@ -185,7 +186,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfoLambdaQueryWrapper
                 .eq(OrderInfo::getUserId, userId)
                 //orderStatus不等于null值，再封装条件，否则查询所有订单
-                .eq(orderStatus!=null, OrderInfo::getOrderStatus, orderStatus)
+                .eq(orderStatus != null, OrderInfo::getOrderStatus, orderStatus)
                 .orderByDesc(OrderInfo::getId);
         baseMapper.selectPage(pageModel, orderInfoLambdaQueryWrapper);
 
@@ -216,6 +217,27 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setOrderItemList(orderItemList);
 
         return orderInfo;
+    }
+
+    @Override
+    public void updateOrderStatus(String orderNo, Integer orderStatus) {
+        LambdaQueryWrapper<OrderInfo> orderInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        orderInfoLambdaQueryWrapper
+                .eq(OrderInfo::getOrderNo, orderNo);
+        OrderInfo orderInfo = baseMapper.selectOne(orderInfoLambdaQueryWrapper);
+        orderInfo.setOrderStatus(orderStatus);
+        orderInfo.setPaymentTime(new Date());
+        //还是需要获取orderInfo内容
+        baseMapper.updateById(orderInfo);
+
+        //记录日志
+        OrderLog orderLog = new OrderLog();
+        orderLog.setOrderId(orderInfo.getId());
+        orderLog.setProcessStatus(1);
+        orderLog.setNote("支付宝支付成功");
+        //将封装数据插入数据库
+        orderLogMapper.insert(orderLog);
+
     }
 
     private List<OrderItem> findOrderItemByOrderId(OrderInfo orderInfo) {

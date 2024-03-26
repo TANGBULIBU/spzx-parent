@@ -1,5 +1,6 @@
 package com.atguigu.spzx.pay.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.atguigu.spzx.feign.order.OrderFeignClient;
 import com.atguigu.spzx.model.entity.order.OrderInfo;
 import com.atguigu.spzx.model.entity.pay.PaymentInfo;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +30,8 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         //防止重复点击支付按钮生成多条paymentInfo记录，先对paymentInfo进行查询如果存在则不生成相应的记录
         PaymentInfo paymentInfo = this.getPaymentInfoByOrderNo(orderNo);
 
-        if(paymentInfo != null){
+        //是否能够查询到支付数据
+        if (paymentInfo != null) {
             return paymentInfo;
         }
 
@@ -57,10 +61,31 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         return paymentInfo;
     }
 
-    private PaymentInfo getPaymentInfoByOrderNo(String orderNo) {
+    @Override
+    @Transactional
+    public void updatePaymentStatus(Map<String, String> paramMap, Integer payType) {
+        //查询PaymentInfo
+
+        PaymentInfo paymentInfo = this.getPaymentInfoByOrderNo(paramMap.get("out_trade_no"));
+        //更新支付信息
+        if (paymentInfo.getPaymentStatus() == 1) {
+            return;
+        }
+
+        //更新支付信息
+        paymentInfo.setPaymentStatus(1);
+        paymentInfo.setOutTradeNo(paramMap.get("trade_no"));
+        paymentInfo.setCallbackTime(new Date());
+        paymentInfo.setCallbackContent(JSON.toJSONString(paramMap));
+        baseMapper.updateById(paymentInfo);
+
+    }
+
+    public PaymentInfo getPaymentInfoByOrderNo(String orderNo) {
         LambdaQueryWrapper<PaymentInfo> paymentInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //获取订单号
         paymentInfoLambdaQueryWrapper.eq(PaymentInfo::getOrderNo, orderNo);
-        PaymentInfo paymentInfo = baseMapper.selectOne(paymentInfoLambdaQueryWrapper);
-        return paymentInfo;
+        PaymentInfo paymentInfo = baseMapper.selectOne(paymentInfoLambdaQueryWrapper);//mp查询相关条件
+        return paymentInfo;//返回给支付信息
     }
 }
