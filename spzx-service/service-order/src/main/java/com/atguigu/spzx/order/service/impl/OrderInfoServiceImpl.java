@@ -225,6 +225,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfoLambdaQueryWrapper
                 .eq(OrderInfo::getOrderNo, orderNo);
         OrderInfo orderInfo = baseMapper.selectOne(orderInfoLambdaQueryWrapper);
+        //更新订单状态为已支付
         orderInfo.setOrderStatus(orderStatus);
         orderInfo.setPaymentTime(new Date());
         //还是需要获取orderInfo内容
@@ -233,7 +234,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //记录日志
         OrderLog orderLog = new OrderLog();
         orderLog.setOrderId(orderInfo.getId());
-        orderLog.setProcessStatus(1);
+        orderLog.setProcessStatus(orderStatus);
         orderLog.setNote("支付宝支付成功");
         //将封装数据插入数据库
         orderLogMapper.insert(orderLog);

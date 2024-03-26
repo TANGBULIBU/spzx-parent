@@ -12,4 +12,6 @@ public interface PaymentInfoService extends IService<PaymentInfo> {
     void updatePaymentStatus(Map<String, String> paramMap, Integer payType);
 
     PaymentInfo getPaymentInfoByOrderNo(String orderNo);
+
+
 }

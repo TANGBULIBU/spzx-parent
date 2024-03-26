@@ -79,6 +79,10 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         paymentInfo.setCallbackContent(JSON.toJSONString(paramMap));
         baseMapper.updateById(paymentInfo);
 
+        //更新支付状态后 之前将部分数据也更换为支付状态
+        orderFeignClient.updateOrderStatus(paymentInfo.getOrderNo() , payType) ;
+
+
     }
 
     public PaymentInfo getPaymentInfoByOrderNo(String orderNo) {
