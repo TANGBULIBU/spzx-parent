@@ -12,7 +12,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableUserWebMvcConfiguration
 @EnableUserTokenFeignInterceptor
 @EnableFeignClients(basePackages = {
-        "com.atguigu.spzx.feign"
+        "com.atguigu.spzx.feign.order",
+        "com.atguigu.spzx.feign.product"
 })
 @EnableConfigurationProperties(value = { AlipayProperties.class })
 public class PayApplication {

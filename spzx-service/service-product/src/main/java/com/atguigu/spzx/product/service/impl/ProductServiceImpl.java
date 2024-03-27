@@ -2,6 +2,7 @@ package com.atguigu.spzx.product.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.atguigu.spzx.model.dto.product.SkuSaleDto;
 import com.atguigu.spzx.model.entity.product.Product;
 import com.atguigu.spzx.model.entity.product.ProductDetails;
 import com.atguigu.spzx.model.entity.product.ProductSku;
@@ -11,6 +12,7 @@ import com.atguigu.spzx.product.mapper.ProductMapper;
 import com.atguigu.spzx.product.mapper.ProductSkuMapper;
 import com.atguigu.spzx.product.service.ProductService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,6 +93,16 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         productItemVo.setSkuSpecValueMap(skuSpecValueMap);
         productItemVo.setSpecValueList(specValueJsonArray);
         return productItemVo;
+    }
+
+    @Override
+    public Boolean updateSkuSaleNum(List<SkuSaleDto> skuSaleDtoList) {
+        if(!CollectionUtils.isEmpty(skuSaleDtoList)) {
+            for(SkuSaleDto skuSaleDto : skuSaleDtoList) {
+                productSkuMapper.updateSale(skuSaleDto.getSkuId(), skuSaleDto.getNum());
+            }
+        }
+        return true;
     }
 
 //    @Override

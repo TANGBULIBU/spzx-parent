@@ -5,6 +5,9 @@
 
     <resultMap id="productSkuMap" type="com.atguigu.spzx.model.entity.product.ProductSku" autoMapping="true">
     </resultMap>
+    <update id="updateSale">
+        update product_sku set sale_num = sale_num + #{num}, stock_num = stock_num - #{num}, update_time =  now() where id = #{skuId}
+    </update>
 
     <!--  查询畅销商品列表  -->
     <select id="findProductSkuBySale" resultMap="productSkuMap">

@@ -2,7 +2,10 @@ package com.atguigu.spzx.pay.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.atguigu.spzx.feign.order.OrderFeignClient;
+import com.atguigu.spzx.feign.product.ProductFeignClient;
+import com.atguigu.spzx.model.dto.product.SkuSaleDto;
 import com.atguigu.spzx.model.entity.order.OrderInfo;
+import com.atguigu.spzx.model.entity.order.OrderItem;
 import com.atguigu.spzx.model.entity.pay.PaymentInfo;
 import com.atguigu.spzx.pay.mapper.PaymentInfoMapper;
 import com.atguigu.spzx.pay.service.PaymentInfoService;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -22,6 +26,9 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
 
     @Autowired
     private OrderFeignClient orderFeignClient;
+
+    @Autowired
+    private ProductFeignClient productFeignClient;
 
     @Override
     @Transactional
@@ -65,7 +72,8 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
     @Transactional
     public void updatePaymentStatus(Map<String, String> paramMap, Integer payType) {
         //查询PaymentInfo
-
+//获取订单号
+        String orderNo = paramMap.get("out_trade_no");
         PaymentInfo paymentInfo = this.getPaymentInfoByOrderNo(paramMap.get("out_trade_no"));
         //更新支付信息
         if (paymentInfo.getPaymentStatus() == 1) {
@@ -80,9 +88,21 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         baseMapper.updateById(paymentInfo);
 
         //更新支付状态后 之前将部分数据也更换为支付状态
-        orderFeignClient.updateOrderStatus(paymentInfo.getOrderNo() , payType) ;
+        orderFeignClient.updateOrderStatus(paymentInfo.getOrderNo(), payType);
 
+        //更新库存 product_sku 库存 销量
+        //获取订单
+        OrderInfo orderInfo = orderFeignClient.getOrderInfoByOrderNo(orderNo).getData();
+        //获取订单项
+        List<OrderItem> orderItemList = orderInfo.getOrderItemList();
+        List<SkuSaleDto> skuSaleDtoList = orderItemList.stream().map(orderItem -> {
+            SkuSaleDto skuSaleDto = new SkuSaleDto();
+            skuSaleDto.setSkuId(orderItem.getSkuId());
+            skuSaleDto.setNum(orderItem.getSkuNum());
+            return skuSaleDto;
+        }).collect(Collectors.toList());
 
+        productFeignClient.updateSkuSaleNum(skuSaleDtoList);
     }
 
     public PaymentInfo getPaymentInfoByOrderNo(String orderNo) {

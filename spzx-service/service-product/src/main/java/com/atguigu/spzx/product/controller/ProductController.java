@@ -1,5 +1,6 @@
 package com.atguigu.spzx.product.controller;
 
+import com.atguigu.spzx.model.dto.product.SkuSaleDto;
 import com.atguigu.spzx.model.vo.common.Result;
 import com.atguigu.spzx.model.vo.common.ResultCodeEnum;
 import com.atguigu.spzx.model.vo.h5.ProductItemVo;
@@ -8,10 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Tag(name = "商品详情管理")
@@ -27,6 +27,12 @@ public class ProductController {
     public Result<ProductItemVo> item(@Parameter(name = "skuId", description = "商品skuId", required = true) @PathVariable Long skuId) {
         ProductItemVo productItemVo = productService.item(skuId);
         return Result.build(productItemVo , ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "更新商品sku销量")
+    @PostMapping("/updateSkuSaleNum")
+    public Boolean updateSkuSaleNum(@RequestBody List<SkuSaleDto> skuSaleDtoList) {
+        return productService.updateSkuSaleNum(skuSaleDtoList);
     }
 
 //    @Operation(summary = "获取商品sku信息")

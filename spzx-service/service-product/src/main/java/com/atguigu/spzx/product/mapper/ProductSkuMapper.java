@@ -15,7 +15,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
 
     List<ProductSku> findByPage(Page<ProductSku> pageModel,@Param("productSkuDto") ProductSkuDto productSkuDto);
 
-    ProductSku getById(Long skuId);
 
-    List<ProductSku> findByProductId(Long productId);
+
+    void updateSale(Long skuId, Integer num);
 }
