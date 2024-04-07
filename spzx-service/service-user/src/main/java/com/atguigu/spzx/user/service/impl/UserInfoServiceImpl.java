@@ -32,6 +32,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     @Autowired
     private UserInfoMapper userInfoMapper;
 
+    //test
     @Autowired
     private RedisTemplate<String , String> redisTemplate;
 
